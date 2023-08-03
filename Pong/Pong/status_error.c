@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <curses.h>
 
-// 1-4 맵 관련 오류, 5: 게임 실행 관련 오류
+// 1:5 맵 관련 오류, 5: 게임 실행 관련 오류
 void error(int status_code) {
 	if(status_code > 4) endwin();
 	switch (status_code) {

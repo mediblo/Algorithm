@@ -4,17 +4,13 @@
 #define Y_MAX 27 // 게임 내 Y 최대 좌표
 #define G_TIME 250 // 게임 내 이동 속도
 
-// 키보드 화살표
-#define KB_LEFT 75
-#define KB_RIGHT 77
-#define KB_UP 72
-#define KB_DOWN 80
-
+// 좌표 구조체
 typedef struct {
 	int x;
 	int y;
 } point;
 
+// 플레이어와 적 좌표 구조체
 typedef struct {
 	point e_p;
 	point p_p;

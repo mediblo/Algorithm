@@ -84,6 +84,8 @@ int enemy_check(point p) {
 		return 4;
 	case 7:
 		return 7;
+	case 9:
+		return 9;
 	}
 
 	error(9);
