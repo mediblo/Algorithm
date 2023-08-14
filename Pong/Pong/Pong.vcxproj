@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Enemy.c" />
+    <ClCompile Include="item.c" />
     <ClCompile Include="pictur.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="player.c" />

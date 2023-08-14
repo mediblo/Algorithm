@@ -4,16 +4,16 @@
 
 int enemy_dir = ENEMY_UP;
 
-void enemy_move(point p);
-int enemy_check(point p);
-void enemy_change_dir(point p);
+void enemy_move(Point p);
+int enemy_check(Point p);
+void enemy_change_dir(Point p);
 
-void enemy_move(point p) {
+void enemy_move(Point p) {
 	int chk;
 	int temp;
 	static int before_data = 2;
 
-	point pP = p;
+	Point pP = p;
 
 	switch (enemy_dir) {
 	case ENEMY_LEFT:
@@ -69,10 +69,13 @@ void enemy_move(point p) {
 			before_data = temp;
 		}
 	}
-	else if (chk == 9) error(8); // player 잡음
+	else if (chk == 9) {
+		game_over_scene();
+		error(8); // player 잡음
+	}
 }
 
-int enemy_check(point p) {
+int enemy_check(Point p) {
 	switch (map[p.y][p.x]) {
 	case 0:
 		return 0;
@@ -91,7 +94,7 @@ int enemy_check(point p) {
 	error(9);
 }
 
-void enemy_change_dir(point p) {
+void enemy_change_dir(Point p) {
 	bool wall_chk[4] = { FALSE, FALSE, FALSE, FALSE };
 	bool escape = TRUE;
 	int ran_dir;

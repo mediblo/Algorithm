@@ -3,12 +3,12 @@
 
 int player_dir = PLAYER_RIGHT;
 
-void player_move(point p);
-int player_check(point p);
+void player_move(Point p);
+int player_check(Point p);
 
-void player_move(point p) {
+void player_move(Point p) {
 	int chk;
-	point pP = p;
+	Point pP = p;
 
 	switch (player_dir) {
 		case PLAYER_LEFT:
@@ -29,7 +29,11 @@ void player_move(point p) {
 
 	chk = player_check(pP);
 
-	if (chk == 1) map[pP.y][pP.x] = 9;
+	if (chk == 3) map[pP.y][pP.x] = 9;
+	else if (chk == 1) {
+		map[pP.y][pP.x] = 9;
+		score_add(TRUE);
+	}
 	else if (chk == 2) {
 		if (p.x == 1) map[p.y][X_MAX-2] = 9;
 		else map[p.y][1] = 9;
@@ -38,15 +42,19 @@ void player_move(point p) {
 	map[p.y][p.x] = 2;
 }
 
-int player_check(point p) {
+int player_check(Point p) {
 	switch (map[p.y][p.x]) {
 		case 0:
 		case 7:
 			return 0;
 		case 4:
 			return 2;
-		default:
+		case 1:
 			return 1;
+		case 8:
+			g_over_flag = true;
+		default:
+			return 3;
 	}
 
 	error(5);

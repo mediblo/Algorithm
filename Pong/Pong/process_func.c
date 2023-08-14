@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "head.h"
 
-void func_a() {
+void player_change_dir() {
 	if (_kbhit()) {
 		int key = _getch();
 
