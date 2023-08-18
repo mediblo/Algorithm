@@ -38,6 +38,10 @@ void player_move(Point p) {
 		if (p.x == 1) map[p.y][X_MAX-2] = 9;
 		else map[p.y][1] = 9;
 	}
+	else if (chk == 4) {
+		map[pP.y][pP.x] = 9;
+		item_get();
+	}
 	else return;
 	map[p.y][p.x] = 2;
 }
@@ -49,6 +53,8 @@ int player_check(Point p) {
 			return 0;
 		case 4:
 			return 2;
+		case 5:
+			return 4;
 		case 1:
 			return 1;
 		case 8:

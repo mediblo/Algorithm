@@ -36,8 +36,11 @@ enum enemy_direction {
 extern int player_dir;
 
 extern bool g_over_flag;
+extern int difficulty;
+extern int item_time;
+extern int score;
 
-// 0 벽 / 1 점수 / 2 빈 값 / 4 넘어가는 지점 / 7 진입 불가 / 8 적 시작지점 / 9 플레이어
+// 0 벽 / 1 점수 / 2 빈 값 / 4 넘어가는 지점 / 5 아이템 / 7 진입 불가 / 8 적 시작지점 / 9 플레이어
 
 extern int map[Y_MAX][X_MAX];
 
@@ -49,7 +52,7 @@ void init_scene(); // PDC 초기 설정
 P_list start_scene(); // 게임 화면 그리기
 void title_scene(); // 타이틀 pac-man 그리기
 int select_title(); // 타이틀 선택
-void game_over_scene(); // 게임오버 화면
+int game_over_scene(); // 게임오버 화면
 
 P_list debug_scene(); // 디버그용
 
@@ -58,17 +61,29 @@ void orig_read(); // 이진 파일이 없을 시 제작
 void make_b(); // 이진 파일 제작
 void read_b(); // 이진 파일 불러오기
 
+void start_map(); // 초기 맵 복사
+void restart_map(); // 재시작 맵 복사
+
 // player.c
 void player_move(Point p); // 플레이어 움직임
 int player_check(Point p); // 플레이어 체크
 
 // Enemy.c
-void enemy_move(Point p); // 적 움직임
-int enemy_check(Point p); // 적 맵 체크
+void enemy_move(Point p); // 적 움직임 [ Easy ]
+int enemy_check(Point p); // 적 맵 체크 [ Easy ]
 void enemy_change_dir(Point p); // 적 방향 바꾸기 [ Easy ]
+void normal_enemy_move(p); // 적 움직임 [ Normal ]
+int normal_enemy_check(int e_dir, Point e_p); // 적 맵 체크 [ Normal ]
+void normal_if_item(P_list* p); // 적 아이템 체크 [ Normal ]
+
+void normal_right_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
+void normal_left_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
+void normal_down_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
+void normal_up_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
 
 // item.c
 int score_add(bool is_score); // 점수 증가
+void item_get(); // 아이템 얻음
 
 // process_func.c
 void player_change_dir(); // 비동기 함수 [ 키보드 입력 ]

@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include "head.h"
 
-int score_add(bool is_score) {
-	static int score = 0;
+int item_time = 0;
+int score = 0;
 
-	return is_score ? ++score : score;
-}
+void item_get() { item_time = 7; }
+int score_add(bool is_score) { return is_score ? ++score : score; }

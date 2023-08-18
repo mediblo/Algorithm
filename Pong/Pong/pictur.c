@@ -6,9 +6,12 @@ void init_scene();
 P_list start_scene();
 void title_scene();
 int select_title();
-void game_over_scene();
+int game_over_scene();
 
 P_list debug_scene();
+
+bool g_over_flag = false;
+int difficulty = 0;
 
 void init_scene() {
 	// PDcurses 초기화
@@ -16,7 +19,7 @@ void init_scene() {
 	cbreak(); // 입력 스트림 버퍼링 해제
 	noecho(); // 사용자 입력 화면에 안뜸
 	keypad(stdscr, TRUE); // 특수키 사용 여부 ( 화살표 키 )
-	// nodelay(stdscr, TRUE); // 비동기적 설정 [ 타이틀 때는 FALSE로 해야함 ]
+	nodelay(stdscr, TRUE); // 비동기적 설정 [ 타이틀 때는 FALSE로 해야함 ]
 }
 
 P_list start_scene() {
@@ -25,6 +28,7 @@ P_list start_scene() {
 		for (int y = 0; y < Y_MAX; y++) {
 			if (map[y][x] == 0) mvprintw(y, x + 30, "@"); // 벽
 			else if (map[y][x] == 1) mvprintw(y, x + 30, "."); // 점수
+			else if (map[y][x] == 5) mvprintw(y, x + 30, "Z"); // 아이템
 			else if (map[y][x] == 8) {
 				mvprintw(y, x + 30, "E"); // 적
 				p.e_p.x = x;
@@ -38,6 +42,7 @@ P_list start_scene() {
 		}
 	}
 	mvprintw(4, 70, "SCORE : %d", score_add(FALSE));
+	if(item_time != 0) mvprintw(6, 70, "ITEM : %d", item_time);
 	refresh();
 	return p;
 }
@@ -150,6 +155,7 @@ int select_title() {
 							flag = true;
 							break;
 						case 10:
+							difficulty = game_sel;
 							return 0;
 					}
 					if (flag) break;
@@ -173,9 +179,8 @@ int select_title() {
 //  GGG GGGG
 //    GGG  G
 
-void game_over_scene() {
-	static bool g_over_flag = false;
-	if (!g_over_flag) return;
+int game_over_scene() {
+	if (g_over_flag == false) return;
 
 	char g_over[9][12] = {	"     GGG",
 							"   GGG GGG",
@@ -187,7 +192,7 @@ void game_over_scene() {
 							"   GGG GGGG",
 							"     GGG  G"};
 
-	char* g_over_sel[4] = { "TRY AGAIN", "CHANGE DIFF", "TITLE", "QUIT"};
+	char* g_over_sel[4] = { "TRY AGAIN", "TITLE", "QUIT"};
 	int sel = 0;
 	int key = 0;
 
@@ -197,7 +202,7 @@ void game_over_scene() {
 	refresh();
 
 	while (1) {
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 3; i++) {
 			if (sel == i) {
 				attron(A_REVERSE);
 				mvprintw(15 + i * 2, 16, g_over_sel[i]);
@@ -216,7 +221,7 @@ void game_over_scene() {
 			case 's':
 			case 'S':
 				sel++;
-				if (sel == 4) sel = 3;
+				if (sel == 3) sel = 2;
 				break;
 			case 10:
 				return sel;
