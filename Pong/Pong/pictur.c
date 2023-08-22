@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <curses.h>
 #include <Windows.h>
 #include "head.h"
@@ -7,6 +9,8 @@ P_list start_scene();
 void title_scene();
 int select_title();
 int game_over_scene();
+void rank_name();
+char* get_your_name();
 
 P_list debug_scene();
 
@@ -26,6 +30,7 @@ P_list start_scene() {
 	P_list p = {0,0};
 	for (int x = 0; x < X_MAX; x++) {
 		for (int y = 0; y < Y_MAX; y++) {
+			if (map[y][x] == 5 && difficulty == 0) map[y][x] = 1;
 			if (map[y][x] == 0) mvprintw(y, x + 30, "@"); // 벽
 			else if (map[y][x] == 1) mvprintw(y, x + 30, "."); // 점수
 			else if (map[y][x] == 5) mvprintw(y, x + 30, "Z"); // 아이템
@@ -227,4 +232,37 @@ int game_over_scene() {
 				return sel;
 		}
 	}
+}
+
+void rank_name() {
+	nodelay(stdscr, FALSE);
+	char* num[4] = { "ST", "ND", "RD", "TH" };
+
+		clear();
+	mvprintw(3, 35, "TOP 10 RANKER");
+	mvprintw(28, 30, "PRESS ANY KEY TO GO BACK TITLE");
+	for (int i = 0; i < 10; i++)
+		mvprintw(5 + i * 2, 35, "%d%s SCORE : %d [%s]", i + 1, num[i > 2 ? 3 : i], ranker[i].score, ranker[i].name);
+	getch();
+	nodelay(stdscr, TRUE);
+}
+
+char* get_your_name() {
+	char name[4];
+	bool flag = true;
+	clear();
+	mvprintw(8, 30, "YOUR SCORE : %d",score_add(false));
+	mvprintw(10, 30, "INPUT YOUR NAME [3char] : ");
+	echo();
+	getstr(name);
+	for (int i = 0; i < 4; i++) {
+		if (name[i] == '\0') {
+			flag = false;
+			break;
+		}
+	}
+	if (flag) error(11);
+	noecho();
+
+	return name;
 }

@@ -17,6 +17,12 @@ typedef struct {
 	Point p_p;
 } P_list;
 
+// 랭커 데이터 구조체
+typedef struct {
+	int score;
+	char name[4];
+} RANKER;
+
 // 플레이어 방향
 enum player_direction {
 	PLAYER_LEFT,
@@ -39,6 +45,7 @@ extern bool g_over_flag;
 extern int difficulty;
 extern int item_time;
 extern int score;
+extern RANKER ranker[10];
 
 // 0 벽 / 1 점수 / 2 빈 값 / 4 넘어가는 지점 / 5 아이템 / 7 진입 불가 / 8 적 시작지점 / 9 플레이어
 
@@ -53,6 +60,8 @@ P_list start_scene(); // 게임 화면 그리기
 void title_scene(); // 타이틀 pac-man 그리기
 int select_title(); // 타이틀 선택
 int game_over_scene(); // 게임오버 화면
+void rank_name(); // 랭커 이름 출력
+char* get_your_name(); // 랭커 이름 입력
 
 P_list debug_scene(); // 디버그용
 
@@ -72,7 +81,7 @@ int player_check(Point p); // 플레이어 체크
 void enemy_move(Point p); // 적 움직임 [ Easy ]
 int enemy_check(Point p); // 적 맵 체크 [ Easy ]
 void enemy_change_dir(Point p); // 적 방향 바꾸기 [ Easy ]
-void normal_enemy_move(p); // 적 움직임 [ Normal ]
+void normal_enemy_move(P_list p); // 적 움직임 [ Normal ]
 int normal_enemy_check(int e_dir, Point e_p); // 적 맵 체크 [ Normal ]
 void normal_if_item(P_list* p); // 적 아이템 체크 [ Normal ]
 
@@ -87,3 +96,10 @@ void item_get(); // 아이템 얻음
 
 // process_func.c
 void player_change_dir(); // 비동기 함수 [ 키보드 입력 ]
+
+// rank.c
+void init_rank(); // 맨 처음 랭커 초기화
+void first_make_r(); // 맨 처음 랭크 이진파일 제작
+void make_r(); // 이진파일 제작
+void read_r(); // 이진파일 읽기
+void is_ranker(); // 랭커 추가

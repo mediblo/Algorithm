@@ -12,6 +12,7 @@ int main() {
 	srand(time(NULL));
 
 	read_b();
+	read_r();
 	start_map();
 	init_scene();
 
@@ -53,8 +54,16 @@ int main() {
 					}
 
 					clear();
-					if (g_over_flag) break;
+					if (g_over_flag) {
+						is_ranker();
+						rank_name();
+						break;
+					}
 				}
+				break;
+			case 1:
+				rank_name();
+				flag = true;
 				break;
 			case 3:
 				printf("GAME EXIT");

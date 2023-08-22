@@ -141,6 +141,7 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="player.c" />
     <ClCompile Include="process_func.c" />
+    <ClCompile Include="rank.c" />
     <ClCompile Include="read_map.c" />
     <ClCompile Include="status_error.c" />
   </ItemGroup>

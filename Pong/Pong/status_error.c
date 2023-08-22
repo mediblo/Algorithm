@@ -33,12 +33,20 @@ void error(int status_code) {
 			printf("enemy_move switch error\n");
 			printf("error code : 7");
 			break;
-		case 8:
+		case 8: // 현재는 안씀
 			printf("player vs enemy\n");
 			break;
 		case 9:
 			printf("enemy_check error\n");
 			printf("error code : 9");
+			break;
+		case 10:
+			printf("랭커 집계 오류 [ 관리자 호출 바람 ]\n");
+			printf("error code : 10");
+			break;
+		case 11:
+			printf("랭커 이름 오류\n");
+			printf("error code : 11");
 			break;
 		default:
 			printf("OTHER ERROR\n");
