@@ -90,6 +90,8 @@ void normal_left_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
 void normal_down_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
 void normal_up_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
 
+int BFS(Point ep);
+
 // item.c
 int score_add(bool is_score); // 점수 증가
 void item_get(); // 아이템 얻음

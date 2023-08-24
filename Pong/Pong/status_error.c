@@ -48,6 +48,14 @@ void error(int status_code) {
 			printf("랭커 이름 오류\n");
 			printf("error code : 11");
 			break;
+		case 20:
+			printf("큐 포화 에러\n");
+			printf("error code : 20");
+			break;
+		case 21:
+			printf("큐 공백 에러\n");
+			printf("error code : 21");
+			break;
 		default:
 			printf("OTHER ERROR\n");
 			printf("error code : %d", status_code);

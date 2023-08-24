@@ -32,6 +32,7 @@ int main() {
 					// p = debug_scene();
 
 					refresh();
+					BFS(p.e_p);
 					switch (difficulty) {
 						case 0:
 							enemy_move(p.e_p);

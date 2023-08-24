@@ -1,6 +1,13 @@
 #include <curses.h>
 #include <stdlib.h>
+#include <Windows.h>
 #include "head.h"
+
+#define MAX_QUEUE_SIZE 100
+
+Point h_data[MAX_QUEUE_SIZE];
+int front;
+int rear;
 
 int enemy_dir = ENEMY_UP;
 
@@ -17,7 +24,28 @@ void normal_left_chk(P_list p, Point* e_p, int* chk);
 void normal_down_chk(P_list p, Point* e_p, int* chk);
 void normal_up_chk(P_list p, Point* e_p, int* chk);
 
-///////////////////////// EASY /////////////////////////
+void enqueue(Point val);
+Point dequeue();
+Point peek();
+void add_front(Point val);
+Point delete_rear();
+Point get_rear();
+
+void init_queue() { front = rear = 0; }
+int is_empty() { return front == rear; }
+int is_full() { return front == (rear + 1) % MAX_QUEUE_SIZE; }
+int size() { return (rear - front + MAX_QUEUE_SIZE) % MAX_QUEUE_SIZE; }
+void init_deque() { init_queue(); }
+void add_rear(Point val) { enqueue(val); }
+Point delete_front() { return dequeue(); }
+Point get_front() { peek(); }
+
+Point get_point(int x, int y);
+int is_valid(int x, int y);
+int BFS(Point ep);
+void backtracking(Point** poly, Point here, Point ep);
+
+///////////////////////// EASY ///////////////////////// All Random
 
 void enemy_move(Point p) {
 	int chk;
@@ -126,9 +154,10 @@ void enemy_change_dir(Point p) {
 
 	enemy_dir = ran_dir;
 }
+
 ///////////////////////// EASY /////////////////////////
 
-//////////////////////// NORMAL ////////////////////////
+//////////////////////// NORMAL //////////////////////// Similarity BFS/DFS
 
 void normal_enemy_move(P_list p) {
 	int chk = 0;
@@ -251,3 +280,111 @@ void normal_if_item(P_list* p) {
 }
 
 //////////////////////// NORMAL ////////////////////////
+
+///////////////////////// HARD ///////////////////////// Real BFS
+
+void enqueue(Point val) {
+	if (is_full()) error(20);
+	rear = (rear + 1) % MAX_QUEUE_SIZE;
+	h_data[rear] = val;
+}
+
+Point dequeue() {
+	if (is_empty()) error(21);
+	front = (front + 1) % MAX_QUEUE_SIZE;
+	return h_data[front];
+}
+
+Point peek() {
+	if (is_empty()) error(21);
+	return h_data[(front + 1) % MAX_QUEUE_SIZE];
+}
+
+void add_front(Point val) {
+	if (is_full()) error(20);
+	h_data[front] = val;
+	front = (front - 1 + MAX_QUEUE_SIZE) % MAX_QUEUE_SIZE;
+}
+
+Point delete_rear() {
+	int prev = rear;
+	if (is_empty()) error(21);
+	rear = (rear - 1 + MAX_QUEUE_SIZE) % MAX_QUEUE_SIZE;
+	return h_data[prev];
+}
+
+Point get_rear() {
+	if (is_empty()) error(21);
+	return h_data[rear];
+}
+
+Point get_point(int x, int y) {
+	Point p;
+	p.x = x;
+	p.y = y;
+	return p;
+}
+
+int is_valid(int x, int y) {
+	if (x < 0 || y < 0 || x >= X_MAX || y >= Y_MAX) return 0;
+	else if (map[y][x] == 0) return 0;
+	return 1;
+}
+
+int BFS(Point ep) {
+	int temp[Y_MAX][X_MAX];
+	for (int y = 0; y < Y_MAX; y++)
+		for (int x = 0; x < X_MAX; x++)
+			temp[y][x] = map[y][x];
+
+	Point polymorph[Y_MAX][X_MAX];
+
+	int x, y;
+	Point here;
+	init_deque();
+	add_rear(get_point(ep.x, ep.y));
+	while (is_empty() == 0) {
+		here = delete_front();
+		x = here.x;
+		y = here.y;
+		if (map[y][x] == 9) {
+			error(40);
+		}
+		else {
+			map[y][x] = 0;
+			if (is_valid(x - 1, y)) { add_rear(get_point(x - 1, y)); polymorph[y][x - 1] = here; }
+			if (is_valid(x + 1, y)) { add_rear(get_point(x + 1, y)); polymorph[y][x + 1] = here; }
+			if (is_valid(x, y - 1)) { add_rear(get_point(x, y - 1)); polymorph[y - 1][x] = here; }
+			if (is_valid(x, y + 1)) { add_rear(get_point(x, y + 1)); polymorph[y + 1][x] = here; }
+		}
+	}
+	error(23);
+	return 0;
+}
+
+void backtracking(Point** poly, Point here, Point ep) {
+	Point temp[Y_MAX * X_MAX];
+	Point p;
+	int stack_len = 0;
+	temp[stack_len].x = poly[here.x];
+	temp[stack_len].y = poly[here.y];
+
+	for (; temp[stack_len].x != ep.x && temp[stack_len].y != ep.y;) {
+		temp[++stack_len].x = poly[temp[stack_len].x];
+		temp[stack_len].y = poly[temp[stack_len].y];
+	}
+
+	Point reversedTemp[Y_MAX * X_MAX];
+	for (int i = 0; i <= stack_len; i++) {
+		reversedTemp[i] = temp[stack_len - i];
+	}
+
+	for (int i = 0; i < stack_len; i++) {
+		map[reversedTemp[i].y][reversedTemp[i].x] = 0;
+		start_scene();
+		refresh();
+		Sleep(G_TIME);
+	}
+
+	
+}
