@@ -20,10 +20,9 @@ int main() {
 		if(flag) sel = select_title();
 		flag = false;
 		g_over_flag = false;
-		score = 0;
+		init_score();
 
 		clear();
-		start_scene();
 		switch(sel){
 			case 0:
 				while(1){
@@ -32,7 +31,6 @@ int main() {
 					// p = debug_scene();
 
 					refresh();
-					BFS(p.e_p);
 					switch (difficulty) {
 						case 0:
 							enemy_move(p.e_p);
@@ -40,8 +38,9 @@ int main() {
 						case 1:
 							normal_enemy_move(p);
 							break;
-						default:
-							enemy_move(p.e_p);
+						case 2:
+							BFS(p);
+							break;
 					}
 					player_move(p.p_p);
 					refresh();
@@ -53,6 +52,7 @@ int main() {
 							item_cnt = 0;
 						}
 					}
+					check_all_score();
 
 					clear();
 					if (g_over_flag) {
@@ -66,7 +66,7 @@ int main() {
 				rank_name();
 				flag = true;
 				break;
-			case 3:
+			case 2:
 				printf("GAME EXIT");
 				endwin();
 				return 0;
@@ -82,7 +82,7 @@ int main() {
 				restart_map();
 				break;
 			case 2:
-				sel = 3;
+				sel = 2;
 				break;
 		}
 	} while (1);

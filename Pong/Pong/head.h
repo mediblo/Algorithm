@@ -21,6 +21,7 @@ typedef struct {
 typedef struct {
 	int score;
 	char name[4];
+	int diff;
 } RANKER;
 
 // 플레이어 방향
@@ -44,7 +45,6 @@ extern int player_dir;
 extern bool g_over_flag;
 extern int difficulty;
 extern int item_time;
-extern int score;
 extern RANKER ranker[10];
 
 // 0 벽 / 1 점수 / 2 빈 값 / 4 넘어가는 지점 / 5 아이템 / 7 진입 불가 / 8 적 시작지점 / 9 플레이어
@@ -83,18 +83,20 @@ int enemy_check(Point p); // 적 맵 체크 [ Easy ]
 void enemy_change_dir(Point p); // 적 방향 바꾸기 [ Easy ]
 void normal_enemy_move(P_list p); // 적 움직임 [ Normal ]
 int normal_enemy_check(int e_dir, Point e_p); // 적 맵 체크 [ Normal ]
-void normal_if_item(P_list* p); // 적 아이템 체크 [ Normal ]
+void if_item(P_list* p); // 적 아이템 체크 [ Normal ]
 
 void normal_right_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
 void normal_left_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
 void normal_down_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
 void normal_up_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
 
-int BFS(Point ep);
+void BFS(P_list p);
 
 // item.c
 int score_add(bool is_score); // 점수 증가
 void item_get(); // 아이템 얻음
+void init_score(); // 점수 초기화
+void check_all_score(); // 점수를 다 먹었는지?
 
 // process_func.c
 void player_change_dir(); // 비동기 함수 [ 키보드 입력 ]

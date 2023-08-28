@@ -56,6 +56,10 @@ void error(int status_code) {
 			printf("큐 공백 에러\n");
 			printf("error code : 21");
 			break;
+		case 22:
+			printf("BFS 에러\n");
+			printf("error code : 22");
+			break;
 		default:
 			printf("OTHER ERROR\n");
 			printf("error code : %d", status_code);

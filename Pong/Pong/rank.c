@@ -16,6 +16,7 @@ void init_rank() {
 	for (int i = 0; i < 10; i++) {
 		ranker[i].score = 10 - i;
 		strcpy(ranker[i].name, "AAA");
+		ranker[i].diff = 0;
 	}
 }
 
@@ -49,14 +50,16 @@ void read_r() {
 }
 
 void is_ranker() {
-	if (ranker[9].score > score) return;
+	int n_score = score_add(false);
+	if (ranker[9].score >= n_score) return;
 	
 	RANKER temp;
-	temp.score = score;
+	temp.score = n_score;
 	strcpy(temp.name, get_your_name());
+	temp.diff = difficulty;
 	
 	for (int i = 9; i >= 0; i--) {
-		if (ranker[i].score < score) {
+		if (ranker[i].score < n_score || (ranker[i].score == n_score && ranker[i].diff < difficulty)) {
 			if (i == 9) ranker[i] = temp;
 			else {
 				temp = ranker[i];

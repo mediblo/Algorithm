@@ -28,4 +28,3 @@ void player_change_dir() {
 		}
 	}
 }
-

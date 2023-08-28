@@ -32,6 +32,7 @@ P_list start_scene() {
 		for (int y = 0; y < Y_MAX; y++) {
 			if (map[y][x] == 5 && difficulty == 0) map[y][x] = 1;
 			if (map[y][x] == 0) mvprintw(y, x + 30, "@"); // 벽
+			else if (map[y][x] == 6) mvprintw(y, x + 30, "*");
 			else if (map[y][x] == 1) mvprintw(y, x + 30, "."); // 점수
 			else if (map[y][x] == 5) mvprintw(y, x + 30, "Z"); // 아이템
 			else if (map[y][x] == 8) {
@@ -94,14 +95,14 @@ int select_title() {
 	int sel = 0;
 	int key = 0;
 
-	char* game_scene[4] = {"START", " RANKING", "KEY SETTING", "EXIT"};
+	char* game_scene[3] = {"START", " RANKING", "EXIT"};
 	char* game_diff[3] = { "EASY", "NORMAL", "HARD" };
 
 	while (1) {
 		clear();
 		title_scene();
 
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 3; i++) {
 			if (sel == i) {
 				attron(A_REVERSE);
 				mvprintw(15, 20 + (i * 15), "%s", game_scene[i]);
@@ -122,7 +123,7 @@ int select_title() {
 		case 'd':
 		case 'D':
 			sel++;
-			if (sel == 4) sel = 3;
+			if (sel == 3) sel = 2;
 			break;
 		}
 
@@ -237,24 +238,26 @@ int game_over_scene() {
 void rank_name() {
 	nodelay(stdscr, FALSE);
 	char* num[4] = { "ST", "ND", "RD", "TH" };
+	char* game_diff[3] = { "EASY", "NORMAL", "HARD" };
 
-		clear();
+	clear();
 	mvprintw(3, 35, "TOP 10 RANKER");
 	mvprintw(28, 30, "PRESS ANY KEY TO GO BACK TITLE");
 	for (int i = 0; i < 10; i++)
-		mvprintw(5 + i * 2, 35, "%d%s SCORE : %d [%s]", i + 1, num[i > 2 ? 3 : i], ranker[i].score, ranker[i].name);
+		mvprintw(5 + i * 2, 35, "%d%s SCORE : %d [%s] DIFF : %s", i + 1, num[i > 2 ? 3 : i], ranker[i].score, ranker[i].name, game_diff[ranker[i].diff]);
 	getch();
 	nodelay(stdscr, TRUE);
 }
 
 char* get_your_name() {
-	char name[4];
+	char name[20];
 	bool flag = true;
 	clear();
 	mvprintw(8, 30, "YOUR SCORE : %d",score_add(false));
 	mvprintw(10, 30, "INPUT YOUR NAME [3char] : ");
 	echo();
-	getstr(name);
+
+	getstr(name, sizeof(name) - 1);
 	for (int i = 0; i < 4; i++) {
 		if (name[i] == '\0') {
 			flag = false;

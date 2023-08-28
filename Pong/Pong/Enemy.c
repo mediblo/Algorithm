@@ -17,7 +17,7 @@ void enemy_change_dir(Point p);
 
 void normal_enemy_move(P_list p_l);
 int normal_enemy_check(int e_dir, Point e_p);
-void normal_if_item(P_list* p);
+void if_item(P_list* p);
 
 void normal_right_chk(P_list p, Point* e_p, int* chk);
 void normal_left_chk(P_list p, Point* e_p, int* chk);
@@ -41,9 +41,10 @@ Point delete_front() { return dequeue(); }
 Point get_front() { peek(); }
 
 Point get_point(int x, int y);
-int is_valid(int x, int y);
-int BFS(Point ep);
-void backtracking(Point** poly, Point here, Point ep);
+int is_valid(int x, int y, int chk);
+void BFS(P_list p);
+void backtracking(Point* poly, Point here, Point ep);
+void hard_enemy_move(Point pP, Point p);
 
 ///////////////////////// EASY ///////////////////////// All Random
 
@@ -167,7 +168,7 @@ void normal_enemy_move(P_list p) {
 
 	Point e_p = p.e_p;
 
-	normal_if_item(&p);
+	if_item(&p);
 
 	if (start_go <= 0) {
 		if (p.e_p.x <= p.p_p.x && p.e_p.y <= p.p_p.y) { // 남동
@@ -270,12 +271,12 @@ int normal_enemy_check(int e_dir, Point e_p) {
 	}
 }
 
-void normal_if_item(P_list* p) {
+void if_item(P_list* p) {
 	if (item_time) {
-		if (p->e_p.x < p->p_p.x) p->p_p.x = 0;
-		else p->p_p.x = X_MAX;
-		if (p->e_p.y < p->p_p.y) p->p_p.y = 0;
-		else p->p_p.y = Y_MAX;
+		if (p->e_p.x <= p->p_p.x) p->p_p.x = 1;
+		else p->p_p.x = X_MAX-2;
+		if (p->e_p.y <= p->p_p.y) p->p_p.y = 1;
+		else p->p_p.y = Y_MAX-2;
 	}
 }
 
@@ -325,66 +326,102 @@ Point get_point(int x, int y) {
 	return p;
 }
 
-int is_valid(int x, int y) {
+int is_valid(int x, int y, int chk) {
 	if (x < 0 || y < 0 || x >= X_MAX || y >= Y_MAX) return 0;
-	else if (map[y][x] == 0) return 0;
+	else if (chk == 0) return 0;
 	return 1;
 }
 
-int BFS(Point ep) {
+void BFS(P_list p) {
 	int temp[Y_MAX][X_MAX];
+
 	for (int y = 0; y < Y_MAX; y++)
 		for (int x = 0; x < X_MAX; x++)
 			temp[y][x] = map[y][x];
 
 	Point polymorph[Y_MAX][X_MAX];
+	if_item(&p);
 
 	int x, y;
 	Point here;
 	init_deque();
-	add_rear(get_point(ep.x, ep.y));
+	add_rear(get_point(p.e_p.x, p.e_p.y));
 	while (is_empty() == 0) {
 		here = delete_front();
 		x = here.x;
 		y = here.y;
-		if (map[y][x] == 9) {
-			error(40);
+		if (y == p.p_p.y && x == p.p_p.x) {
+			backtracking(polymorph, here, p.e_p);
+			return;
 		}
 		else {
-			map[y][x] = 0;
-			if (is_valid(x - 1, y)) { add_rear(get_point(x - 1, y)); polymorph[y][x - 1] = here; }
-			if (is_valid(x + 1, y)) { add_rear(get_point(x + 1, y)); polymorph[y][x + 1] = here; }
-			if (is_valid(x, y - 1)) { add_rear(get_point(x, y - 1)); polymorph[y - 1][x] = here; }
-			if (is_valid(x, y + 1)) { add_rear(get_point(x, y + 1)); polymorph[y + 1][x] = here; }
+			temp[y][x] = 0;
+			if (is_valid(x - 1, y, temp[y][x-1])) { add_rear(get_point(x - 1, y)); polymorph[y][x - 1] = here; }
+			if (is_valid(x + 1, y, temp[y][x+1])) { add_rear(get_point(x + 1, y)); polymorph[y][x + 1] = here; }
+			if (is_valid(x, y - 1, temp[y-1][x])) { add_rear(get_point(x, y - 1)); polymorph[y - 1][x] = here; }
+			if (is_valid(x, y + 1, temp[y+1][x])) { add_rear(get_point(x, y + 1)); polymorph[y + 1][x] = here; }
 		}
 	}
-	error(23);
-	return 0;
+	error(22);
 }
 
-void backtracking(Point** poly, Point here, Point ep) {
+void backtracking(Point* poly, Point here, Point ep) {
 	Point temp[Y_MAX * X_MAX];
 	Point p;
 	int stack_len = 0;
-	temp[stack_len].x = poly[here.x];
-	temp[stack_len].y = poly[here.y];
+	temp[stack_len].x = here.x;
+	temp[stack_len].y = here.y;
 
-	for (; temp[stack_len].x != ep.x && temp[stack_len].y != ep.y;) {
-		temp[++stack_len].x = poly[temp[stack_len].x];
-		temp[stack_len].y = poly[temp[stack_len].y];
+	for(; temp[stack_len].x != ep.x || temp[stack_len].y != ep.y; stack_len++) {
+		temp[stack_len+1].x = poly[temp[stack_len].y * X_MAX + temp[stack_len].x].x;
+		temp[stack_len+1].y = poly[temp[stack_len].y * X_MAX + temp[stack_len].x].y;
 	}
+	if (item_time && stack_len == 0) return;
 
 	Point reversedTemp[Y_MAX * X_MAX];
 	for (int i = 0; i <= stack_len; i++) {
 		reversedTemp[i] = temp[stack_len - i];
 	}
 
+	/* 디버깅 코드
 	for (int i = 0; i < stack_len; i++) {
-		map[reversedTemp[i].y][reversedTemp[i].x] = 0;
+		map[reversedTemp[i].y][reversedTemp[i].x] = 6;
 		start_scene();
 		refresh();
 		Sleep(G_TIME);
 	}
+	*/
 
-	
+	hard_enemy_move(reversedTemp[1], ep);
+}
+
+void hard_enemy_move(Point pP, Point p) {
+	int chk = map[pP.y][pP.x];
+	static int before_data = 2;
+	int temp;
+
+	if (chk == 1 || chk == 2 || chk == 5 || chk == 7) {
+		temp = map[pP.y][pP.x];
+		map[pP.y][pP.x] = 8;
+		map[p.y][p.x] = before_data;
+		before_data = temp;
+	}
+	else if (chk == 4) {
+		if (p.x == 1) {
+			temp = map[pP.y][pP.x];
+			map[p.y][X_MAX - 2] = 8;
+			map[p.y][p.x] = before_data;
+			before_data = temp;
+		}
+		else {
+			temp = map[pP.y][pP.x];
+			map[p.y][1] = 8;
+			map[p.y][p.x] = before_data;
+			before_data = temp;
+		}
+	}
+	else if (chk == 9) {
+		before_data = 2;
+		g_over_flag = true;
+	}
 }
