@@ -3,12 +3,13 @@
 
 int player_dir = PLAYER_RIGHT;
 
-void player_move(Point p);
-int player_check(Point p);
+void player_move(P_list p_l);
+int player_check(Point p, Point e_p);
 
-void player_move(Point p) {
+void player_move(P_list p_l) {
 	int chk;
-	Point pP = p;
+	Point pP = p_l.p_p;
+	Point p = p_l.p_p;
 
 	switch (player_dir) {
 		case PLAYER_LEFT:
@@ -27,7 +28,7 @@ void player_move(Point p) {
 			error(6);
 	}
 
-	chk = player_check(pP);
+	chk = player_check(pP, p_l.e_p);
 
 	if (chk == 3) map[pP.y][pP.x] = 9;
 	else if (chk == 1) {
@@ -46,7 +47,7 @@ void player_move(Point p) {
 	map[p.y][p.x] = 2;
 }
 
-int player_check(Point p) {
+int player_check(Point p, Point e_p) {
 	switch (map[p.y][p.x]) {
 		case 0:
 		case 7:
@@ -58,7 +59,8 @@ int player_check(Point p) {
 		case 1:
 			return 1;
 		case 8:
-			g_over_flag = true;
+			if (item_time) if_item_death(2, e_p);
+			else g_over_flag = true;
 		default:
 			return 3;
 	}

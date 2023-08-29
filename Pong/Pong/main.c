@@ -8,6 +8,7 @@ int main() {
 	P_list p;
 	int sel;
 	int item_cnt = 0;
+	bool enemy_flag = true;
 	bool flag = true;
 	srand(time(NULL));
 
@@ -31,27 +32,31 @@ int main() {
 					// p = debug_scene();
 
 					refresh();
-					switch (difficulty) {
-						case 0:
-							enemy_move(p.e_p);
-							break;
-						case 1:
-							normal_enemy_move(p);
-							break;
-						case 2:
-							BFS(p);
-							break;
+					if(enemy_flag){
+						switch (difficulty) {
+							case 0:
+								enemy_move(p.e_p);
+								break;
+							case 1:
+								normal_enemy_move(p);
+								break;
+							case 2:
+								BFS(p);
+								break;
+						}
 					}
-					player_move(p.p_p);
+					player_move(p);
 					refresh();
 					Sleep(G_TIME);
 					if (item_time) {
-						item_cnt+=G_TIME;
+						enemy_flag = !enemy_flag;
+						item_cnt += G_TIME;
 						if (item_cnt >= 1000) {
 							item_time--;
 							item_cnt = 0;
 						}
 					}
+					else enemy_flag = TRUE;
 					check_all_score();
 
 					clear();

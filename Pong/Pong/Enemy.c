@@ -46,6 +46,8 @@ void BFS(P_list p);
 void backtracking(Point* poly, Point here, Point ep);
 void hard_enemy_move(Point pP, Point p);
 
+void if_item_death(int* before_data, Point p);
+
 ///////////////////////// EASY ///////////////////////// All Random
 
 void enemy_move(Point p) {
@@ -224,6 +226,11 @@ void normal_enemy_move(P_list p) {
 		}
 	}
 	else if (chk == 9) {
+		if (item_time) {
+			map[11][10] = 7;
+			start_go = 3;
+			if_item_death(before_data, e_p);
+		}
 		start_go = 3;
 		before_data = 2;
 		g_over_flag = true;
@@ -268,17 +275,11 @@ int normal_enemy_check(int e_dir, Point e_p) {
 			return map[e_p.y][e_p.x - 1];
 		case ENEMY_RIGHT:
 			return map[e_p.y][e_p.x + 1];
+		default:
+			error(12);
 	}
 }
 
-void if_item(P_list* p) {
-	if (item_time) {
-		if (p->e_p.x <= p->p_p.x) p->p_p.x = 1;
-		else p->p_p.x = X_MAX-2;
-		if (p->e_p.y <= p->p_p.y) p->p_p.y = 1;
-		else p->p_p.y = Y_MAX-2;
-	}
-}
 
 //////////////////////// NORMAL ////////////////////////
 
@@ -421,7 +422,31 @@ void hard_enemy_move(Point pP, Point p) {
 		}
 	}
 	else if (chk == 9) {
+		if (item_time) if_item_death(before_data, p);
+		else {
+			before_data = 2;
+			g_over_flag = true;
+		}
+	}
+}
+
+///////////////////////// HARD /////////////////////////
+
+//////////////////////// EXTRA /////////////////////////
+
+void if_item(P_list* p) {
+	if (item_time) {
+		if (p->e_p.x <= p->p_p.x) p->p_p.x = 1;
+		else p->p_p.x = X_MAX - 2;
+		if (p->e_p.y <= p->p_p.y) p->p_p.y = 1;
+		else p->p_p.y = Y_MAX - 2;
+	}
+}
+
+void if_item_death(int* before_data, Point p) {
+	if (item_time) {
+		map[13][10] = 8;
+		map[p.y][p.x] = 2;
 		before_data = 2;
-		g_over_flag = true;
 	}
 }

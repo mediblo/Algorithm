@@ -74,23 +74,14 @@ void start_map(); // 초기 맵 복사
 void restart_map(); // 재시작 맵 복사
 
 // player.c
-void player_move(Point p); // 플레이어 움직임
-int player_check(Point p); // 플레이어 체크
+void player_move(P_list p_l); // 플레이어 움직임
+int player_check(Point p, Point e_p); // 플레이어 체크
 
 // Enemy.c
 void enemy_move(Point p); // 적 움직임 [ Easy ]
-int enemy_check(Point p); // 적 맵 체크 [ Easy ]
-void enemy_change_dir(Point p); // 적 방향 바꾸기 [ Easy ]
 void normal_enemy_move(P_list p); // 적 움직임 [ Normal ]
-int normal_enemy_check(int e_dir, Point e_p); // 적 맵 체크 [ Normal ]
-void if_item(P_list* p); // 적 아이템 체크 [ Normal ]
-
-void normal_right_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
-void normal_left_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
-void normal_down_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
-void normal_up_chk(P_list p, Point* e_p, int* chk); // Normal 전용 알고리즘
-
-void BFS(P_list p);
+void BFS(P_list p); // 적 움직임 [ Hard ]
+void if_item_death(int* before_data, Point p); // [ 아이템 획득 시 사망 ]
 
 // item.c
 int score_add(bool is_score); // 점수 증가
