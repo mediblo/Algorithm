@@ -9,7 +9,7 @@ Point h_data[MAX_QUEUE_SIZE];
 int front;
 int rear;
 
-int enemy_dir = ENEMY_UP;
+int enemy_dir = CHAR_UP;
 
 void enemy_move(Point p);
 int enemy_check(Point p);
@@ -58,31 +58,31 @@ void enemy_move(Point p) {
 	Point pP = p;
 
 	switch (enemy_dir) {
-	case ENEMY_LEFT:
+	case CHAR_LEFT:
 		if (map[p.y][p.x - 1] == 0) enemy_change_dir(p);
 		break;
-	case ENEMY_RIGHT:
+	case CHAR_RIGHT:
 		if (map[p.y][p.x + 1] == 0) enemy_change_dir(p);
 		break;
-	case ENEMY_DOWN:
+	case CHAR_DOWN:
 		if (map[p.y + 1][p.x] == 0) enemy_change_dir(p);
 		break;
-	case ENEMY_UP:
+	case CHAR_UP:
 		if (map[p.y - 1][p.x] == 0) enemy_change_dir(p);
 		break;
 	}
 
 	switch (enemy_dir) {
-	case ENEMY_LEFT:
+	case CHAR_LEFT:
 		pP.x--;
 		break;
-	case ENEMY_RIGHT:
+	case CHAR_RIGHT:
 		pP.x++;
 		break;
-	case ENEMY_DOWN:
+	case CHAR_DOWN:
 		pP.y++;
 		break;
-	case ENEMY_UP:
+	case CHAR_UP:
 		pP.y--;
 		break;
 	default:
@@ -200,7 +200,7 @@ void normal_enemy_move(P_list p) {
 	}
 	else {
 		start_go--;
-		chk = normal_enemy_check(ENEMY_UP, p.e_p);
+		chk = normal_enemy_check(CHAR_UP, p.e_p);
 		e_p.y--;
 	}
 
@@ -239,41 +239,41 @@ void normal_enemy_move(P_list p) {
 
 void normal_right_chk(P_list p, Point* e_p, int* chk) { // µ¿
 	if (p.e_p.x != p.p_p.x && *chk == 0) {
-		*chk = normal_enemy_check(ENEMY_RIGHT, p.e_p);
+		*chk = normal_enemy_check(CHAR_RIGHT, p.e_p);
 		if (*chk != 0) e_p->x++;
 	}
 }
 
 void normal_left_chk(P_list p, Point* e_p, int* chk) { // ¼­
 	if (p.e_p.x != p.p_p.x && *chk == 0) {
-		*chk = normal_enemy_check(ENEMY_LEFT, p.e_p);
+		*chk = normal_enemy_check(CHAR_LEFT, p.e_p);
 		if (*chk != 0) e_p->x--;
 	}
 }
 
 void normal_down_chk(P_list p, Point* e_p, int* chk) { // ³²
 	if (p.e_p.y != p.p_p.y && *chk == 0) {
-		*chk = normal_enemy_check(ENEMY_DOWN, p.e_p);
+		*chk = normal_enemy_check(CHAR_DOWN, p.e_p);
 		if (*chk != 0) e_p->y++;
 	}
 }
 
 void normal_up_chk(P_list p, Point* e_p, int* chk) { // ºÏ
 	if (p.e_p.y != p.p_p.y && *chk == 0) {
-		*chk = normal_enemy_check(ENEMY_UP, p.e_p);
+		*chk = normal_enemy_check(CHAR_UP, p.e_p);
 		if (*chk != 0) e_p->y--;
 	}
 }
 
 int normal_enemy_check(int e_dir, Point e_p) {
 	switch (e_dir) {
-		case ENEMY_DOWN:
+		case CHAR_DOWN:
 			return map[e_p.y + 1][e_p.x];
-		case ENEMY_UP:
+		case CHAR_UP:
 			return map[e_p.y - 1][e_p.x];
-		case ENEMY_LEFT:
+		case CHAR_LEFT:
 			return map[e_p.y][e_p.x - 1];
-		case ENEMY_RIGHT:
+		case CHAR_RIGHT:
 			return map[e_p.y][e_p.x + 1];
 		default:
 			error(12);

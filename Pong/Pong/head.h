@@ -24,20 +24,12 @@ typedef struct {
 	int diff;
 } RANKER;
 
-// 플레이어 방향
-enum player_direction {
-	PLAYER_LEFT,
-	PLAYER_RIGHT,
-	PLAYER_UP,
-	PLAYER_DOWN
-};
-
-// 적 방향
-enum enemy_direction {
-	ENEMY_LEFT,
-	ENEMY_RIGHT,
-	ENEMY_UP,
-	ENEMY_DOWN
+// 캐릭터 방향
+enum Character_direction {
+	CHAR_LEFT,
+	CHAR_RIGHT,
+	CHAR_UP,
+	CHAR_DOWN
 };
 
 extern int player_dir;
@@ -93,8 +85,5 @@ void check_all_score(); // 점수를 다 먹었는지?
 void player_change_dir(); // 비동기 함수 [ 키보드 입력 ]
 
 // rank.c
-void init_rank(); // 맨 처음 랭커 초기화
-void first_make_r(); // 맨 처음 랭크 이진파일 제작
-void make_r(); // 이진파일 제작
 void read_r(); // 이진파일 읽기
 void is_ranker(); // 랭커 추가

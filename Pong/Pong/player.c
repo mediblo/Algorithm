@@ -1,7 +1,7 @@
 #include <curses.h>
 #include "head.h"
 
-int player_dir = PLAYER_RIGHT;
+int player_dir = CHAR_RIGHT;
 
 void player_move(P_list p_l);
 int player_check(Point p, Point e_p);
@@ -12,16 +12,16 @@ void player_move(P_list p_l) {
 	Point p = p_l.p_p;
 
 	switch (player_dir) {
-		case PLAYER_LEFT:
+		case CHAR_LEFT:
 			pP.x--;
 			break;
-		case PLAYER_RIGHT:
+		case CHAR_RIGHT:
 			pP.x++;
 			break;
-		case PLAYER_DOWN:
+		case CHAR_DOWN:
 			pP.y++;
 			break;
-		case PLAYER_UP:
+		case CHAR_UP:
 			pP.y--;
 			break;
 		default:
